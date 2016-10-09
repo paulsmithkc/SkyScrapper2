@@ -8,7 +8,7 @@ public class Player : MonoBehaviour
 {
     // Layers
     private const int UI_LAYER = 5;
-    private const int BIRD_LAYER = 8;
+    private const int HOOKER_LAYER = 8;
     private const int PLAYER_LAYER = 9;
 
     // Tags
@@ -35,7 +35,8 @@ public class Player : MonoBehaviour
     private float _pitch = 0.0f;
     private float _pitchSensitivity = 180.0f;
     private float _pitchMax = 90.0f;
-    private float _ropeLength = 50.0f;
+    private float _ropeMaxLength = 50.0f;
+    private float _ropeRelaxedLength = 10.0f;
     private float _ropeForceNormal = 0.3f;
     private float _ropeForceGoal = 1.0f;
     private float _ropeFireDecelerate = 0.25f;
@@ -196,7 +197,7 @@ public class Player : MonoBehaviour
             _camera.transform.position, 
             _camera.transform.forward, 
             out hitInfo, 
-            maxDistance: _ropeLength, 
+            maxDistance: _ropeMaxLength, 
             layerMask: layerMask
         );
 
@@ -287,17 +288,18 @@ public class Player : MonoBehaviour
 
         // Spawn ropes
         Vector3 playerPosition = transform.position;
-        int birdMask = (1 << BIRD_LAYER);
+        int birdMask = (1 << HOOKER_LAYER);
         int playerMask = ~(1 << PLAYER_LAYER | 1 << UI_LAYER);  // Ignore Player Layer
         var nearbyColliders =
-            from c in Physics.OverlapSphere(transform.position, _ropeLength * 0.5f, birdMask)
+            from c in Physics.OverlapSphere(transform.position, _ropeMaxLength, birdMask)
             select new {
                 c,
                 c.transform.position,
                 c.gameObject.tag,
                 distance = (c.transform.position - playerPosition).magnitude
         };
-        foreach (var x in nearbyColliders.OrderBy(x => x.distance).Take(8))
+        //Debug.LogFormat("{0} Colliders Nearby", nearbyColliders.Count());
+        foreach (var x in nearbyColliders.OrderBy(x => x.distance).Take(16))
         {
             RaycastHit hitInfo;
             bool wasHit = Physics.Linecast(
@@ -306,12 +308,17 @@ public class Player : MonoBehaviour
                 out hitInfo,
                 layerMask: playerMask
             );
-            if (wasHit && (hitInfo.collider.gameObject.tag == BIRD_TAG || hitInfo.collider.gameObject.tag == NEAR_BIRD_TAG))
+            if (wasHit && (
+                hitInfo.collider.gameObject.tag == HOOKER_TAG ||
+                hitInfo.collider.gameObject.tag == BIRD_TAG || 
+                hitInfo.collider.gameObject.tag == NEAR_BIRD_TAG))
             {
                 var r = new Rope(3, this, hitInfo);
                 _ropes.Add(r);
+                if (_ropes.Count >= 6) { break; }
             }
         }
+        //Debug.LogFormat("{0} Ropes Attached", _ropes.Count);
 
         // Play the firing sound
         if (_ropes.Count > 0)
@@ -328,6 +335,7 @@ public class Player : MonoBehaviour
         public GameObject _grapple;
         public LineRenderer _ropeRenderer;
         public float _ropeForce;
+        public float _ropeRelaxedLength;
 
         public Rope(int id, Player player, RaycastHit hitInfo)
         {
@@ -349,9 +357,9 @@ public class Player : MonoBehaviour
             _ropeRenderer.SetWidth(0.1f, 0.1f);
             _ropeRenderer.SetColors(Color.white, Color.white);
 
-            _ropeForce =
-                string.Equals(hitInfo.collider.tag, GOAL_TAG) ?
-                _player._ropeForceGoal : _player._ropeForceNormal;
+            bool attachedToGoal = string.Equals(hitInfo.collider.tag, GOAL_TAG);
+            _ropeForce = attachedToGoal ? _player._ropeForceGoal : _player._ropeForceNormal;
+            _ropeRelaxedLength = attachedToGoal ? 0.0f : _player._ropeRelaxedLength;
         }
 
         public void Update()
@@ -385,6 +393,7 @@ public class Player : MonoBehaviour
             _ropeRenderer.enabled = true;
             
             var ropeVector = (ropeEnd - playerPosition);
+            ropeVector -= ropeVector.normalized * _ropeRelaxedLength;
             _player._rigidbody.AddForce(ropeVector * _ropeForce, ForceMode.Acceleration);
         }
 
