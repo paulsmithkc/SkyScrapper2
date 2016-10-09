@@ -7,16 +7,18 @@ using UnityEngine.SceneManagement;
 public class Player : MonoBehaviour
 {
     // Layers
+    private const int UI_LAYER = 5;
     private const int BIRD_LAYER = 8;
     private const int PLAYER_LAYER = 9;
 
     // Tags
     private const string PLAYER_TAG = "Player";
     private const string HOOKER_TAG = "Hooker";
-    private const string ROOF_TAG = "Roof";
+    private const string PLATFORM_TAG = "Platform";
     private const string GOAL_TAG = "Goal";
     private const string BIRD_TAG = "Bird";
     private const string NEAR_BIRD_TAG = "NearBird";
+    private const string LASER_TAG = "Laser";
 
     // Inputs
     private const string MOUSE_X_INPUT = "Mouse X";
@@ -33,17 +35,23 @@ public class Player : MonoBehaviour
     private float _pitch = 0.0f;
     private float _pitchSensitivity = 180.0f;
     private float _pitchMax = 90.0f;
-    private float _ropeLength = 75.0f;
-    private float _ropeForce = 0.2f;
-    
+    private float _ropeLength = 50.0f;
+    private float _ropeForceNormal = 0.3f;
+    private float _ropeForceGoal = 1.0f;
+    private float _ropeFireDecelerate = 0.25f;
+    private float _instadeathHeight = 0.0f;
+    private float _nearPlatformRadius = 3.0f;
+
     // Game State
     private bool _dead = false;
     private bool _goalReached = false;
     private float _loadLevelDelay = 2.0f;
-    private AudioSource _fxAudioSource = null;
     private List<Rope> _ropes = new List<Rope>();
 
     // Editor Fields
+
+    private AudioSource _fxAudioSource = null;
+    //private AudioSource _targetAudioSource = null;
 
     public Camera _camera;
     public Rigidbody _rigidbody;
@@ -75,11 +83,11 @@ public class Player : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        if (!Application.isEditor)
-        {
-            Cursor.visible = false;
-            Cursor.lockState = CursorLockMode.Locked;
-        }
+        //if (!Application.isEditor)
+        //{
+        //    Cursor.visible = false;
+        //    Cursor.lockState = CursorLockMode.Locked;
+        //}
 
         _pitchMax = Mathf.Clamp(_pitchMax, 0.0f, 90.0f);
         _fxAudioSource = gameObject.AddComponent<AudioSource>();
@@ -97,6 +105,10 @@ public class Player : MonoBehaviour
         {
             _hudFade = GetComponent<HudFade>();
         }
+        if (_target)
+        {
+            _target.SetActive(false);
+        }
 
         _rigidbody.drag = 0.0f;
         _rigidbody.angularDrag = 0.0f;
@@ -107,16 +119,18 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!Application.isEditor)
+        //if (!Application.isEditor)
         {
-            Cursor.visible = false;
-            Cursor.lockState = CursorLockMode.Locked;
+            bool paused = (Time.timeScale == 0.0f);
+            Cursor.visible = paused;
+            Cursor.lockState = paused ? CursorLockMode.None : CursorLockMode.Locked;
         }
 
         // Quit / Restart
 
         if (Input.GetButtonDown(QUIT_INPUT))
         {
+            Time.timeScale = 0.0f;
             Application.Quit();
             return;
         }
@@ -147,7 +161,7 @@ public class Player : MonoBehaviour
             }
             return;
         }
-        if (transform.position.y < -60.0f)
+        if (transform.position.y < _instadeathHeight)
         {
             OnDeath();
             return;
@@ -176,7 +190,7 @@ public class Player : MonoBehaviour
 
         // Grapple Hooks
 
-        int layerMask = ~(1 << PLAYER_LAYER);  // Ignore Player Layer
+        int layerMask = ~(1 << PLAYER_LAYER | 1 << UI_LAYER);  // Ignore Player Layer
         RaycastHit hitInfo;
         bool wasHit = Physics.Raycast(
             _camera.transform.position, 
@@ -188,6 +202,7 @@ public class Player : MonoBehaviour
 
         if (wasHit)
         {
+            _target.transform.parent = null;
             _target.transform.position = hitInfo.point;
         }
         _target.SetActive(wasHit);
@@ -235,23 +250,23 @@ public class Player : MonoBehaviour
 
             // Slow the player down
             _rigidbody.AddForce(
-                _rigidbody.velocity * -0.5f,
+                _rigidbody.velocity * -_ropeFireDecelerate,
                 ForceMode.VelocityChange
             );
 
             // Jump up if near a roof
-            int layerMask = ~(1 << PLAYER_LAYER);  // Ignore Player Layer
-            var nearbyColliders = Physics.OverlapSphere(transform.position, 3.0f, layerMask);
-            var nearRoof = false;
+            int layerMask = ~(1 << PLAYER_LAYER | 1 << UI_LAYER);  // Ignore Player Layer
+            var nearbyColliders = Physics.OverlapSphere(transform.position, _nearPlatformRadius, layerMask);
+            var nearPlatform = false;
             foreach (var c in nearbyColliders)
             {
-                if (c.gameObject.tag == ROOF_TAG)
+                if (c.gameObject.tag == PLATFORM_TAG)
                 {
-                    nearRoof = true;
+                    nearPlatform = true;
                     break;
                 }
             }
-            if (nearRoof)
+            if (nearPlatform)
             {
                 _rigidbody.AddForce(
                     transform.up * 2.0f,
@@ -273,7 +288,7 @@ public class Player : MonoBehaviour
         // Spawn ropes
         Vector3 playerPosition = transform.position;
         int birdMask = (1 << BIRD_LAYER);
-        int playerMask = ~(1 << PLAYER_LAYER);  // Ignore Player Layer
+        int playerMask = ~(1 << PLAYER_LAYER | 1 << UI_LAYER);  // Ignore Player Layer
         var nearbyColliders =
             from c in Physics.OverlapSphere(transform.position, _ropeLength * 0.5f, birdMask)
             select new {
@@ -312,6 +327,7 @@ public class Player : MonoBehaviour
         public Material _ropeMaterial;
         public GameObject _grapple;
         public LineRenderer _ropeRenderer;
+        public float _ropeForce;
 
         public Rope(int id, Player player, RaycastHit hitInfo)
         {
@@ -332,20 +348,24 @@ public class Player : MonoBehaviour
             _ropeRenderer.enabled = true;
             _ropeRenderer.SetWidth(0.1f, 0.1f);
             _ropeRenderer.SetColors(Color.white, Color.white);
+
+            _ropeForce =
+                string.Equals(hitInfo.collider.tag, GOAL_TAG) ?
+                _player._ropeForceGoal : _player._ropeForceNormal;
         }
 
         public void Update()
         {
-            var grappleScale = Vector3.one;
-            var grappleParent = _grapple.transform.parent;
-            while (grappleParent != null)
-            {
-                grappleScale.x /= grappleParent.localScale.x;
-                grappleScale.y /= grappleParent.localScale.y;
-                grappleScale.z /= grappleParent.localScale.z;
-                grappleParent = grappleParent.parent;
-            }
-            _grapple.transform.localScale = grappleScale;
+            //var grappleScale = Vector3.one;
+            //var grappleParent = _grapple.transform.parent;
+            //while (grappleParent != null)
+            //{
+            //    grappleScale.x /= grappleParent.localScale.x;
+            //    grappleScale.y /= grappleParent.localScale.y;
+            //    grappleScale.z /= grappleParent.localScale.z;
+            //    grappleParent = grappleParent.parent;
+            //}
+            //_grapple.transform.localScale = grappleScale;
             _grapple.SetActive(true);
 
             Vector3 playerPosition = _player.transform.position;
@@ -363,9 +383,9 @@ public class Player : MonoBehaviour
             }
             _ropeRenderer.SetPosition(segments, ropeEnd);
             _ropeRenderer.enabled = true;
-
+            
             var ropeVector = (ropeEnd - playerPosition);
-            _player._rigidbody.AddForce(ropeVector * _player._ropeForce, ForceMode.Acceleration);
+            _player._rigidbody.AddForce(ropeVector * _ropeForce, ForceMode.Acceleration);
         }
 
         public void Dispose()
@@ -411,6 +431,7 @@ public class Player : MonoBehaviour
             _fxAudioSource.PlayOneShot(_collisionSound, _collisionSoundVolume);
             _hudFade.FadeTo(Color.black, _loadLevelDelay * 0.5f);
             _hudFade.fadeText.text = "OUCH!";
+            _hudFade.reticle.gameObject.SetActive(false);
 
             foreach (var r in _ropes)
             {
@@ -428,6 +449,7 @@ public class Player : MonoBehaviour
             _rigidbody.AddForce(-_rigidbody.velocity, ForceMode.VelocityChange);
             _hudFade.FadeTo(Color.white, _loadLevelDelay * 0.5f);
             _hudFade.fadeText.text = "NEXT LEVEL";
+            _hudFade.reticle.gameObject.SetActive(false);
 
             foreach (var r in _ropes)
             {
@@ -448,14 +470,16 @@ public class Player : MonoBehaviour
         {
             case PLAYER_TAG:
                 break;
-            case ROOF_TAG:
+            case PLATFORM_TAG:
                 _rigidbody.AddForce(_rigidbody.velocity * -0.5f, ForceMode.VelocityChange);
                 break;
             case GOAL_TAG:
                 OnGoalReached();
                 break;
-            default:
+            case LASER_TAG:
                 OnDeath();
+                break;
+            default:
                 break;
         }
     }
@@ -470,10 +494,12 @@ public class Player : MonoBehaviour
                 OnGoalReached();
                 break;
 			case NEAR_BIRD_TAG:
-            	_fxAudioSource.PlayOneShot(_nearBirdSound, 0.5f);
+            	_fxAudioSource.PlayOneShot(_nearBirdSound, _nearBirdSoundVolume);
+                break;
+            case LASER_TAG:
+                OnDeath();
                 break;
             default:
-                OnDeath();
                 break;
         }
     }

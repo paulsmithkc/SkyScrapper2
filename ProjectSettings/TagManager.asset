@@ -3,7 +3,15 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Player
+  - Hooker
+  - Platform
+  - Goal
+  - Bird
+  - NearBird
+  - Laser
+  - Roof
   layers:
   - Default
   - TransparentFX
@@ -13,8 +21,8 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
+  - Bird
+  - Player
   - 
   - 
   - 
@@ -40,4 +48,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Reticle
+    uniqueID: 1861033733
     locked: 0

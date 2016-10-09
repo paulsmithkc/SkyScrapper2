@@ -7,6 +7,7 @@ public class HudFade : MonoBehaviour
 {
     public Image fadeImage;
     public Text fadeText;
+    public Image reticle;
     public float defaultFadeTime = 4;
 
     private Color startColor;
