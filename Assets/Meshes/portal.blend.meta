@@ -1,15 +1,25 @@
 fileFormatVersion: 2
-guid: ad7e9b14e85e69f409d970f285c027db
-timeCreated: 1475983055
+guid: 6e9a1af8a037e2c498d7dce81d078355
+timeCreated: 1475994038
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
     100000: //RootNode
+    100002: Torus
+    100004: Torus_001
     400000: //RootNode
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: Grappling_Hook
+    400002: Torus
+    400004: Torus_001
+    2300000: Torus
+    2300002: Torus_001
+    2300004: //RootNode
+    3300000: Torus
+    3300002: Torus_001
+    3300004: //RootNode
+    4300000: Torus_001
+    4300002: Torus
+    4300004: Torus_002
     7400000: Default Take
     9500000: //RootNode
   materials:
