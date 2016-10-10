@@ -36,9 +36,9 @@ public class Player : MonoBehaviour
     private float _pitch = 0.0f;
     private float _pitchSensitivity = 180.0f;
     private float _pitchMax = 90.0f;
-    private float _ropeMaxLength = 50.0f;
-    private float _ropeRelaxedLength = 5.0f;
-    private float _ropeForceNormal = 0.3f;
+    private float _ropeMaxLength = 75.0f;
+    private float _ropeRelaxedLength = 10.0f;
+    private float _ropeForceNormal = 0.5f;
     private float _ropeForceGoal = 1.0f;
     private float _ropeFireDecelerate = 0.25f;
     private float _instadeathHeight = 0.0f;
