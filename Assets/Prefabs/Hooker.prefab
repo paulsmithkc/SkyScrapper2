@@ -21,6 +21,7 @@ GameObject:
   - 4: {fileID: 4000013962709822}
   - 135: {fileID: 135000010684340834}
   - 95: {fileID: 95000014138428556}
+  - 122: {fileID: 122000011696550248}
   m_Layer: 8
   m_Name: Hooker
   m_TagString: Hooker
@@ -64,10 +65,10 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010616938830}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0.2588191, z: 0, w: 0.9659258}
   m_LocalPosition: {x: -15, y: 107, z: 25}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 30, z: 0}
   m_Children:
   - {fileID: 4000013618663602}
   m_Father: {fileID: 0}
@@ -125,6 +126,17 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!122 &122000011696550248
+Halo:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010616938830}
+  m_Enabled: 1
+  m_Color:
+    serializedVersion: 2
+    rgba: 4287933848
+  m_Size: 5
 --- !u!135 &135000010684340834
 SphereCollider:
   m_ObjectHideFlags: 1

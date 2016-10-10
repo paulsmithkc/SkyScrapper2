@@ -29,6 +29,7 @@ public class Player : MonoBehaviour
     private const string QUIT_INPUT = "Quit";
     private const string RESTART_INPUT = "Restart";
     private const string PAUSE_INPUT = "Pause";
+    private const string SLOW_TIME_INPUT = "Slow Time";
 
     // Physics Tuning
     private float _yawSensitivity = 360.0f;
@@ -42,6 +43,7 @@ public class Player : MonoBehaviour
     private float _ropeFireDecelerate = 0.25f;
     private float _instadeathHeight = 0.0f;
     private float _nearPlatformRadius = 3.0f;
+    private float _slowTimeSpeed = 0.25f;
 
     // Game State
     private bool _dead = false;
@@ -140,6 +142,10 @@ public class Player : MonoBehaviour
             OnRestart();
             return;
         }
+        if (Input.GetButtonDown(SLOW_TIME_INPUT))
+        {
+            Time.timeScale = (Time.timeScale == _slowTimeSpeed ? 1.0f : _slowTimeSpeed);
+        }
         if (Input.GetButtonDown(PAUSE_INPUT))
         {
             Time.timeScale = (Time.timeScale == 0.0f ? 1.0f : 0.0f);
@@ -178,8 +184,9 @@ public class Player : MonoBehaviour
 
         // Camera
 
-        float deltaYaw = mouseX * _yawSensitivity * deltaTime;
-        float deltaPitch = -mouseY * _pitchSensitivity * deltaTime;
+        float unscaledDeltaTime = Time.timeScale == 0.0f ? 0.0f : Time.unscaledDeltaTime;
+        float deltaYaw = mouseX * _yawSensitivity * unscaledDeltaTime;
+        float deltaPitch = -mouseY * _pitchSensitivity * unscaledDeltaTime;
 
         _pitch = Mathf.Clamp(
             _pitch + deltaPitch,
@@ -227,6 +234,14 @@ public class Player : MonoBehaviour
         foreach (var r in _ropes)
         {
             r.Update();
+        }
+    }
+
+    void FixedUpdate()
+    {
+        foreach (var r in _ropes)
+        {
+            r.FixedUpdate();
         }
     }
 
@@ -391,7 +406,13 @@ public class Player : MonoBehaviour
             }
             _ropeRenderer.SetPosition(segments, ropeEnd);
             _ropeRenderer.enabled = true;
-            
+        }
+
+        public void FixedUpdate()
+        {
+            Vector3 playerPosition = _player.transform.position;
+            Vector3 ropeEnd = _grapple.transform.position;
+
             var ropeVector = (ropeEnd - playerPosition);
             ropeVector -= ropeVector.normalized * _ropeRelaxedLength;
             _player._rigidbody.AddForce(ropeVector * _ropeForce, ForceMode.Acceleration);
