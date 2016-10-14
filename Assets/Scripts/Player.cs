@@ -386,7 +386,7 @@ public class Player : MonoBehaviour
 
             bool attachedToGoal = string.Equals(hitInfo.collider.tag, GOAL_TAG);
             _ropeForce = attachedToGoal ? _player._ropeForceGoal : _player._ropeForceNormal;
-            _ropeRelaxedLength = attachedToGoal ? 0.0f : _player._ropeRelaxedLength;
+            _ropeRelaxedLength = attachedToGoal ? -10.0f : _player._ropeRelaxedLength;
         }
 
         public void Update()
