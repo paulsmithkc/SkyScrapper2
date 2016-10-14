@@ -125,7 +125,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: ca30c34d5620c714cabd1664487713c1, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.274
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -295,6 +295,7 @@ MonoBehaviour:
   fadeText: {fileID: 114000010414662484}
   reticle: {fileID: 114000012424602704}
   defaultFadeTime: 4
+  firstColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &114000012398411278
 MonoBehaviour:
   m_ObjectHideFlags: 1

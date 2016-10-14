@@ -10,7 +10,6 @@ TagManager:
   - Bird
   - NearBird
   - Laser
-  - Roof
   layers:
   - Default
   - TransparentFX
@@ -22,7 +21,7 @@ TagManager:
   - 
   - Hooker
   - Player
-  - 
+  - Laser
   - 
   - 
   - 

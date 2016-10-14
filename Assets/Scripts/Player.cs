@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     private const int UI_LAYER = 5;
     private const int HOOKER_LAYER = 8;
     private const int PLAYER_LAYER = 9;
+    private const int LASER_LAYER = 10;
 
     // Tags
     private const string PLAYER_TAG = "Player";
@@ -30,6 +31,7 @@ public class Player : MonoBehaviour
     private const string RESTART_INPUT = "Restart";
     private const string PAUSE_INPUT = "Pause";
     private const string SLOW_TIME_INPUT = "Slow Time";
+    private const string JUMP_INPUT = "Jump";
 
     // Physics Tuning
     private float _yawSensitivity = 360.0f;
@@ -37,13 +39,14 @@ public class Player : MonoBehaviour
     private float _pitchSensitivity = 180.0f;
     private float _pitchMax = 90.0f;
     private float _ropeMaxLength = 75.0f;
-    private float _ropeRelaxedLength = 10.0f;
+    private float _ropeRelaxedLength = 5.0f;
     private float _ropeForceNormal = 0.5f;
     private float _ropeForceGoal = 1.0f;
-    private float _ropeFireDecelerate = 0.25f;
-    private float _instadeathHeight = 0.0f;
+    private float _ropeFireDecelerate = 0.5f;
+    private float _instadeathHeight = -60.0f;
     private float _nearPlatformRadius = 3.0f;
     private float _slowTimeSpeed = 0.25f;
+    private float _jetpackForce = 20.0f;
 
     // Game State
     private bool _dead = false;
@@ -198,7 +201,7 @@ public class Player : MonoBehaviour
 
         // Grapple Hooks
 
-        int layerMask = ~(1 << PLAYER_LAYER | 1 << UI_LAYER);  // Ignore Player Layer
+        int layerMask = ~(1 << PLAYER_LAYER | 1 << UI_LAYER | 1 << LASER_LAYER);  // Ignore Player Layer
         RaycastHit hitInfo;
         bool wasHit = Physics.Raycast(
             _camera.transform.position, 
@@ -239,6 +242,15 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
+        bool jump = Input.GetButton(JUMP_INPUT);
+        if (jump)
+        {
+            _rigidbody.AddForce(
+                _camera.transform.forward * _jetpackForce,
+                ForceMode.Acceleration
+            );
+        }
+
         foreach (var r in _ropes)
         {
             r.FixedUpdate();
@@ -285,7 +297,7 @@ public class Player : MonoBehaviour
             if (nearPlatform)
             {
                 _rigidbody.AddForce(
-                    transform.up * 2.0f,
+                    transform.up * 3.0f,
                     ForceMode.VelocityChange
                 );
             }

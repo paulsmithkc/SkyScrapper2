@@ -9,6 +9,7 @@ public class HudFade : MonoBehaviour
     public Text fadeText;
     public Image reticle;
     public float defaultFadeTime = 4;
+    public Color firstColor = Color.black;
 
     private Color startColor;
     private Fade currentFade;
@@ -25,7 +26,7 @@ public class HudFade : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        startColor = Color.black;
+        startColor = firstColor;
         fadeImage.color = startColor;
         fadeImage.enabled = true;
         fadeImage.gameObject.SetActive(true);
