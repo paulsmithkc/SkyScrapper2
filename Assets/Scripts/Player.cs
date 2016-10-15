@@ -78,6 +78,9 @@ public class Player : MonoBehaviour
     public GameObject _grapple;
     public string _nextLevel;
 
+    public bool _prevFrameWasHit = false;
+    public RaycastHit _prevFrameHitInfo;
+
     public bool dead
     {
         get { return _dead; }
@@ -99,6 +102,7 @@ public class Player : MonoBehaviour
         _pitchMax = Mathf.Clamp(_pitchMax, 0.0f, 90.0f);
         _fxAudioSource = gameObject.AddComponent<AudioSource>();
         //_targetAudioSource = _target.AddComponent<AudioSource>();
+        _prevFrameWasHit = false;
 
         if (!_camera)
         {
@@ -202,6 +206,8 @@ public class Player : MonoBehaviour
 
         // Grapple Hooks
 
+        Vector3 cameraPosition = _camera.transform.position;
+        Vector3 cameraForward = _camera.transform.forward;
         int layerMask = ~(
             1 << PLAYER_LAYER | 
             1 << UI_LAYER | 
@@ -210,17 +216,32 @@ public class Player : MonoBehaviour
         );
         RaycastHit hitInfo;
         bool wasHit = Physics.Raycast(
-            _camera.transform.position, 
-            _camera.transform.forward, 
+            cameraPosition,
+            cameraForward, 
             out hitInfo, 
-            maxDistance: _ropeMaxLength, 
-            layerMask: layerMask
+            _ropeMaxLength, 
+            layerMask
         );
 
+        if (!wasHit)
+        {
+            // Try SphereCast if Raycast failed
+            float radius = 2.0f;
+            wasHit = Physics.SphereCast(
+                cameraPosition,
+                radius,
+                cameraForward,
+                out hitInfo,
+                _ropeMaxLength,
+                layerMask
+            );
+        }
         if (wasHit)
         {
             _target.transform.parent = null;
             _target.transform.position = hitInfo.point;
+            _prevFrameWasHit = wasHit;
+            _prevFrameHitInfo = hitInfo;
         }
         _target.SetActive(wasHit);
 
@@ -232,18 +253,21 @@ public class Player : MonoBehaviour
         {
             if (fire1)
             {
-                FireRope(1, wasHit, hitInfo);
+                FireRope(1, _prevFrameWasHit, _prevFrameHitInfo);
             }
             if (fire2)
             {
-                FireRope(2, wasHit, hitInfo);
+                FireRope(2, _prevFrameWasHit, _prevFrameHitInfo);
             }
         }
-
+        
         foreach (var r in _ropes)
         {
             r.Update(deltaTime);
         }
+
+        _prevFrameWasHit = wasHit;
+        _prevFrameHitInfo = hitInfo;
     }
 
     void FixedUpdate()
