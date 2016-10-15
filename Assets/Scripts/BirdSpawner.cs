@@ -8,8 +8,25 @@ public class BirdSpawner : MonoBehaviour {
     public float _birdSpawnRadius = 50.0f;
     public float _birdSpawnHeight = 30.0f;
 
+    private ProceduralTile _tile = null;
+
     // Use this for initialization
     void Start () {
+        _tile = GetComponent<ProceduralTile>();
+        if (_tile != null)
+        {
+            int levelDifficulty = _tile._levelDifficulty;
+            int minDifficulty = ProceduralLevel.MIN_DIFFICULTY;
+            int maxDifficulty = ProceduralLevel.MAX_DIFFICULTY;
+            if (maxDifficulty > minDifficulty)
+            {
+                _birdSpawnCount =
+                    _birdSpawnCount *
+                    (levelDifficulty - minDifficulty) /
+                    (maxDifficulty - minDifficulty);
+            }
+        }
+
         for (int i = 0; i < _birdSpawnCount; i++)
         {
             Vector2 a = Random.insideUnitCircle;

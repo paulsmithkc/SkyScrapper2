@@ -3,19 +3,26 @@ using System.Collections;
 
 public class ProceduralLevel : MonoBehaviour {
 
+    public const int MIN_DIFFICULTY = 0;
+    public const int MAX_DIFFICULTY = 10;
+
     public GameObject _spawnObject = null;
     public GameObject _goalPrefab = null;
     public ProceduralTile[] _tilePrefabs = new ProceduralTile[1];
     public int _levelLength = 1;
+    public int _levelDifficulty = 5;
     
     // Use this for initialization
     void Start () {
+        _levelDifficulty = Mathf.Clamp(_levelDifficulty, MIN_DIFFICULTY, MAX_DIFFICULTY);
+
         Vector3 curPosition = _spawnObject.transform.position;
         Quaternion curRotation = Quaternion.identity;
         Vector3 curForward = Vector3.forward;
         float lastTileHeight = 10.0f;
         
         int tilePrefabCount = _tilePrefabs.Length;
+        int tilesRejected = 0;
         for (int i = 0; i < _levelLength; ++i)
         {
             int tileIndex = Mathf.Clamp(Random.Range(0, tilePrefabCount), 0, tilePrefabCount - 1);
@@ -38,20 +45,29 @@ public class ProceduralLevel : MonoBehaviour {
                 if (nextForward.z < 0.0f)
                 {
                     // Reject this tile and choose another if it would cause us to loop back
-                    Debug.LogFormat("I{0} Tile {1} Rejected", i, tile.name);
+                    Debug.LogFormat("I{0} Tile {1} Rejected (Rejected {2})", i, tile.name, tilesRejected+1);
                     --i;
-                    continue;
+                    ++tilesRejected;
+                    if (tilesRejected < 10)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
             }
 
             var tilePosition = curPosition + curForward * (0.5f * tile._depth);
             lastTileHeight = tile._height;
 
-            GameObject.Instantiate(
+            var obj = (ProceduralTile)GameObject.Instantiate(
                 tile,
                 tilePosition,
                 curRotation
             );
+            obj._levelDifficulty = this._levelDifficulty;
 
             curPosition = tilePosition + curRotation * new Vector3(
                 0.5f * tile._width * Mathf.Sin(tileRotationY * Mathf.Deg2Rad),
@@ -66,6 +82,7 @@ public class ProceduralLevel : MonoBehaviour {
             curPosition +
             curForward * ( 0.5f * lastTileHeight + 5.0f) +
             Vector3.up * (-0.5f * lastTileHeight);
+        curRotation = curRotation * Quaternion.Euler(-45.0f, 0.0f, 0.0f);
         GameObject.Instantiate(
             _goalPrefab,
             curPosition,

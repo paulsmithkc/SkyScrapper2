@@ -103,7 +103,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4000011820453228, guid: 4a1d429b5a03c2e4282ca29cd64ebc7f, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 100
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4000011820453228, guid: 4a1d429b5a03c2e4282ca29cd64ebc7f, type: 2}
       propertyPath: m_LocalPosition.z
@@ -194,7 +194,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 113110032}
   m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
-  m_LocalPosition: {x: 0, y: 100, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
   m_Children: []
@@ -324,7 +324,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4000012692778778, guid: 98e462b2a0eadac4fa26faf77ec619fc, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 101.79
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4000012692778778, guid: 98e462b2a0eadac4fa26faf77ec619fc, type: 2}
       propertyPath: m_LocalPosition.z
@@ -374,18 +374,13 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 114000013484387588, guid: 53b2953504c732a4f861db18effc9f62,
-        type: 2}
-      propertyPath: _tilePrefabs.Array.size
-      value: 7
-      objectReference: {fileID: 0}
     - target: {fileID: 4000014233731666, guid: 53b2953504c732a4f861db18effc9f62, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4000014233731666, guid: 53b2953504c732a4f861db18effc9f62, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 100
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4000014233731666, guid: 53b2953504c732a4f861db18effc9f62, type: 2}
       propertyPath: m_LocalPosition.z
@@ -416,30 +411,6 @@ Prefab:
       propertyPath: _spawnObject
       value: 
       objectReference: {fileID: 27828338}
-    - target: {fileID: 114000013484387588, guid: 53b2953504c732a4f861db18effc9f62,
-        type: 2}
-      propertyPath: _tilePrefabs.Array.data[4]
-      value: 
-      objectReference: {fileID: 114000013533020864, guid: fb68581b52a044b4db4d8bc21983a234,
-        type: 2}
-    - target: {fileID: 114000013484387588, guid: 53b2953504c732a4f861db18effc9f62,
-        type: 2}
-      propertyPath: _tilePrefabs.Array.data[5]
-      value: 
-      objectReference: {fileID: 114000012899488388, guid: 7c0e60db579579f49a01fb85924f8c41,
-        type: 2}
-    - target: {fileID: 114000013484387588, guid: 53b2953504c732a4f861db18effc9f62,
-        type: 2}
-      propertyPath: _tilePrefabs.Array.data[6]
-      value: 
-      objectReference: {fileID: 114000014206610382, guid: c3de78ef82bc95645bebbaa41a38300f,
-        type: 2}
-    - target: {fileID: 114000013484387588, guid: 53b2953504c732a4f861db18effc9f62,
-        type: 2}
-      propertyPath: _tilePrefabs.Array.data[7]
-      value: 
-      objectReference: {fileID: 114000010958752394, guid: 2487ae95d0a76d44881e1d4411d28322,
-        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 53b2953504c732a4f861db18effc9f62, type: 2}
   m_IsPrefabParent: 0

@@ -42,7 +42,7 @@ public class Player : MonoBehaviour
     private float _ropeMaxLength = 100.0f;
     private float _ropeRelaxedLength = 5.0f;
     private float _ropeFireDecelerate = 0.5f;
-    private float _instadeathHeight = -60.0f;
+    private float _instadeathHeight = -200.0f;
     private float _nearPlatformRadius = 3.0f;
     private float _slowTimeSpeed = 0.25f;
     private float _jetpackForce = 20.0f;
@@ -274,10 +274,12 @@ public class Player : MonoBehaviour
     {
         float deltaTime = Time.fixedDeltaTime;
         bool jump = Input.GetButton(JUMP_INPUT);
-        if (jump)
+        if (jump || _ropes.Count > 0)
         {
+            float force = _jetpackForce;
+            if (!jump) { force *= 0.5f; }
             _rigidbody.AddForce(
-                _camera.transform.forward * _jetpackForce,
+                _camera.transform.forward * force,
                 ForceMode.Acceleration
             );
         }

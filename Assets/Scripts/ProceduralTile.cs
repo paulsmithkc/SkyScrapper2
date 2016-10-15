@@ -8,10 +8,69 @@ public class ProceduralTile : MonoBehaviour
     public float _depth = 50.0f;
     public float _pathRotationY = 0.0f;
     public ProceduralTile _mirrorPrefab = null;
+    public int _levelDifficulty = 5;
+    public GameObject[] _optionalObstacles = new GameObject[0];
 
     // Use this for initialization
     void Start()
     {
+        int minDifficulty = ProceduralLevel.MIN_DIFFICULTY;
+        int maxDifficulty = ProceduralLevel.MAX_DIFFICULTY;
+        _levelDifficulty = Mathf.Clamp(_levelDifficulty, minDifficulty, maxDifficulty);
+
+        if (_optionalObstacles != null && _optionalObstacles.Length > 0)
+        {
+            int obstacleCount = _optionalObstacles.Length;
+            int enabledObjects = 0;
+            if (maxDifficulty > minDifficulty)
+            {
+                enabledObjects =
+                    obstacleCount *
+                    (_levelDifficulty - minDifficulty) /
+                    (maxDifficulty - minDifficulty);
+            }
+            enabledObjects = Mathf.Clamp(enabledObjects, 0, obstacleCount);
+
+            if (enabledObjects <= (obstacleCount / 2))
+            {
+                foreach (var obj in _optionalObstacles)
+                {
+                    obj.SetActive(false);
+                }
+                int loopLimit = obstacleCount * 2;
+                while (enabledObjects > 0 && loopLimit > 0)
+                {
+                    --loopLimit;
+                    int obstacleIndex = Random.Range(0, obstacleCount);
+                    var obj = _optionalObstacles[obstacleIndex];
+                    if (!obj.activeSelf)
+                    {
+                        obj.SetActive(true);
+                        --enabledObjects;
+                    }
+                }
+            }
+            else
+            {
+                int disabledObjects = obstacleCount - enabledObjects;
+                foreach (var obj in _optionalObstacles)
+                {
+                    obj.SetActive(true);
+                }
+                int loopLimit = obstacleCount * 2;
+                while (disabledObjects > 0 && loopLimit > 0)
+                {
+                    --loopLimit;
+                    int obstacleIndex = Random.Range(0, obstacleCount);
+                    var obj = _optionalObstacles[obstacleIndex];
+                    if (obj.activeSelf)
+                    {
+                        obj.SetActive(false);
+                        --disabledObjects;
+                    }
+                }
+            }
+        }
     }
 
     // Update is called once per frame

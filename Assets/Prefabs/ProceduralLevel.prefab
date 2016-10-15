@@ -34,7 +34,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010414065360}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 100, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
@@ -59,4 +59,8 @@ MonoBehaviour:
   - {fileID: 114000014127051640, guid: d833626a88236b344a49b2ae2e1d970b, type: 2}
   - {fileID: 114000012576547158, guid: b6a41cccf51d7134d9534874a1571b1e, type: 2}
   - {fileID: 114000011687637602, guid: e979475709d18ce4d85afc79850d63e6, type: 2}
+  - {fileID: 114000013533020864, guid: fb68581b52a044b4db4d8bc21983a234, type: 2}
+  - {fileID: 114000012899488388, guid: 7c0e60db579579f49a01fb85924f8c41, type: 2}
+  - {fileID: 114000014206610382, guid: c3de78ef82bc95645bebbaa41a38300f, type: 2}
   _levelLength: 16
+  _levelDifficulty: 2
