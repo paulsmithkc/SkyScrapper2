@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public class Player : MonoBehaviour
 {
     // Layers
+    private const int IGNORE_RAYCAST_LAYER = 2;
     private const int UI_LAYER = 5;
     private const int HOOKER_LAYER = 8;
     private const int PLAYER_LAYER = 9;
@@ -38,15 +39,15 @@ public class Player : MonoBehaviour
     private float _pitch = 0.0f;
     private float _pitchSensitivity = 180.0f;
     private float _pitchMax = 90.0f;
-    private float _ropeMaxLength = 75.0f;
+    private float _ropeMaxLength = 100.0f;
     private float _ropeRelaxedLength = 5.0f;
-    private float _ropeForceNormal = 0.5f;
-    private float _ropeForceGoal = 1.0f;
     private float _ropeFireDecelerate = 0.5f;
     private float _instadeathHeight = -60.0f;
     private float _nearPlatformRadius = 3.0f;
     private float _slowTimeSpeed = 0.25f;
     private float _jetpackForce = 20.0f;
+    private float _ropeForceNormal = 0.5f;
+    private float _ropeForceGoal = 1.0f;
 
     // Game State
     private bool _dead = false;
@@ -201,7 +202,12 @@ public class Player : MonoBehaviour
 
         // Grapple Hooks
 
-        int layerMask = ~(1 << PLAYER_LAYER | 1 << UI_LAYER | 1 << LASER_LAYER);  // Ignore Player Layer
+        int layerMask = ~(
+            1 << PLAYER_LAYER | 
+            1 << UI_LAYER | 
+            1 << LASER_LAYER |
+            1 << IGNORE_RAYCAST_LAYER
+        );
         RaycastHit hitInfo;
         bool wasHit = Physics.Raycast(
             _camera.transform.position, 
@@ -236,12 +242,13 @@ public class Player : MonoBehaviour
 
         foreach (var r in _ropes)
         {
-            r.Update();
+            r.Update(deltaTime);
         }
     }
 
     void FixedUpdate()
     {
+        float deltaTime = Time.fixedDeltaTime;
         bool jump = Input.GetButton(JUMP_INPUT);
         if (jump)
         {
@@ -253,7 +260,7 @@ public class Player : MonoBehaviour
 
         foreach (var r in _ropes)
         {
-            r.FixedUpdate();
+            r.FixedUpdate(deltaTime);
         }
     }
 
@@ -283,7 +290,12 @@ public class Player : MonoBehaviour
             );
 
             // Jump up if near a roof
-            int layerMask = ~(1 << PLAYER_LAYER | 1 << UI_LAYER);  // Ignore Player Layer
+            int layerMask = ~(
+                1 << PLAYER_LAYER |
+                1 << UI_LAYER |
+                1 << LASER_LAYER |
+                1 << IGNORE_RAYCAST_LAYER
+            );
             var nearbyColliders = Physics.OverlapSphere(transform.position, _nearPlatformRadius, layerMask);
             var nearPlatform = false;
             foreach (var c in nearbyColliders)
@@ -316,7 +328,12 @@ public class Player : MonoBehaviour
         // Spawn ropes
         Vector3 playerPosition = transform.position;
         int birdMask = (1 << HOOKER_LAYER);
-        int playerMask = ~(1 << PLAYER_LAYER | 1 << UI_LAYER);  // Ignore Player Layer
+        int playerMask = ~(
+            1 << PLAYER_LAYER |
+            1 << UI_LAYER |
+            1 << LASER_LAYER |
+            1 << IGNORE_RAYCAST_LAYER
+        );
         var nearbyColliders =
             from c in Physics.OverlapSphere(transform.position, _ropeMaxLength, birdMask)
             select new {
@@ -389,7 +406,7 @@ public class Player : MonoBehaviour
             _ropeRelaxedLength = attachedToGoal ? -10.0f : _player._ropeRelaxedLength;
         }
 
-        public void Update()
+        public void Update(float deltaTime)
         {
             //var grappleScale = Vector3.one;
             //var grappleParent = _grapple.transform.parent;
@@ -420,7 +437,7 @@ public class Player : MonoBehaviour
             _ropeRenderer.enabled = true;
         }
 
-        public void FixedUpdate()
+        public void FixedUpdate(float deltaTime)
         {
             Vector3 playerPosition = _player.transform.position;
             Vector3 ropeEnd = _grapple.transform.position;
@@ -511,8 +528,6 @@ public class Player : MonoBehaviour
     {
         switch (col.gameObject.tag)
         {
-            case PLAYER_TAG:
-                break;
             case PLATFORM_TAG:
                 _rigidbody.AddForce(_rigidbody.velocity * -0.5f, ForceMode.VelocityChange);
                 break;
@@ -520,6 +535,7 @@ public class Player : MonoBehaviour
                 OnGoalReached();
                 break;
             case LASER_TAG:
+            case BIRD_TAG:
                 OnDeath();
                 break;
             default:
@@ -531,17 +547,17 @@ public class Player : MonoBehaviour
     {
         switch (col.gameObject.tag)
         {
-            case PLAYER_TAG:
+			case NEAR_BIRD_TAG:
+            	_fxAudioSource.PlayOneShot(_nearBirdSound, _nearBirdSoundVolume);
                 break;
             case GOAL_TAG:
                 OnGoalReached();
                 break;
-			case NEAR_BIRD_TAG:
-            	_fxAudioSource.PlayOneShot(_nearBirdSound, _nearBirdSoundVolume);
-                break;
             case LASER_TAG:
+            case BIRD_TAG:
                 OnDeath();
                 break;
+            case PLAYER_TAG:
             default:
                 break;
         }

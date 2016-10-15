@@ -3,10 +3,11 @@ using System.Collections;
 
 public class ProceduralTile : MonoBehaviour
 {
-    public float _width = 1.0f;
-    public float _height = 1.0f;
-    public float _depth = 1.0f;
+    public float _width = 50.0f;
+    public float _height = 50.0f;
+    public float _depth = 50.0f;
     public float _pathRotationY = 0.0f;
+    public ProceduralTile _mirrorPrefab = null;
 
     // Use this for initialization
     void Start()

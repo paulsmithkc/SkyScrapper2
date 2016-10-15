@@ -19,7 +19,31 @@ public class ProceduralLevel : MonoBehaviour {
         for (int i = 0; i < _levelLength; ++i)
         {
             int tileIndex = Mathf.Clamp(Random.Range(0, tilePrefabCount), 0, tilePrefabCount - 1);
-            var tile = _tilePrefabs[tileIndex];
+
+            ProceduralTile tile = _tilePrefabs[tileIndex];
+            float tileRotationY = tile._pathRotationY;
+            Quaternion rotationChange = Quaternion.Euler(0.0f, tileRotationY, 0.0f);
+            Vector3 nextForward = rotationChange * curForward;
+            if (nextForward.z < 0.0f)
+            {
+                if (tile._mirrorPrefab != null)
+                {
+                    // Swap the tile out with its mirror image
+                    tile = tile._mirrorPrefab;
+                    tileRotationY = tile._pathRotationY;
+                    rotationChange = Quaternion.Euler(0.0f, tileRotationY, 0.0f);
+                    nextForward = rotationChange * curForward;
+                }
+
+                if (nextForward.z < 0.0f)
+                {
+                    // Reject this tile and choose another if it would cause us to loop back
+                    Debug.LogFormat("I{0} Tile {1} Rejected", i, tile.name);
+                    --i;
+                    continue;
+                }
+            }
+
             var tilePosition = curPosition + curForward * (0.5f * tile._depth);
             lastTileHeight = tile._height;
 
@@ -28,7 +52,14 @@ public class ProceduralLevel : MonoBehaviour {
                 tilePosition,
                 curRotation
             );
-            curPosition = tilePosition + curForward * (0.5f * tile._depth);
+
+            curPosition = tilePosition + curRotation * new Vector3(
+                0.5f * tile._width * Mathf.Sin(tileRotationY * Mathf.Deg2Rad),
+                0.0f,
+                0.5f * tile._depth * Mathf.Cos(tileRotationY * Mathf.Deg2Rad)
+            );
+            curRotation = rotationChange * curRotation;
+            curForward = nextForward;
         }
 
         curPosition =
@@ -41,8 +72,21 @@ public class ProceduralLevel : MonoBehaviour {
             curRotation
         );
     }
-	
-	// Update is called once per frame
-	void Update () {
-	}
+
+    void OnDrawGizmos()
+    {
+        Vector3 pos =
+            _spawnObject != null ?
+            _spawnObject.transform.position :
+            transform.position;
+        Gizmos.matrix = Matrix4x4.TRS(
+            pos,
+            Quaternion.identity,
+            Vector3.one
+        );
+
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawSphere(Vector3.zero, 1.0f);
+        Gizmos.DrawRay(Vector3.zero, Vector3.forward * 10.0f);
+    }
 }
