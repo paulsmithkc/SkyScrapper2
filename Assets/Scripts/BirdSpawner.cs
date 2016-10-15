@@ -4,7 +4,7 @@ using System.Collections;
 public class BirdSpawner : MonoBehaviour {
 
     public GameObject _birdPrefab = null;
-    public int _birdSpawnCount = 10;
+    public int _birdSpawnCount = 50;
     public float _birdSpawnRadius = 50.0f;
     public float _birdSpawnHeight = 30.0f;
 
@@ -15,14 +15,14 @@ public class BirdSpawner : MonoBehaviour {
         _tile = GetComponent<ProceduralTile>();
         if (_tile != null)
         {
-            int levelDifficulty = _tile._levelDifficulty;
+            int tileDifficulty = _tile._difficulty;
             int minDifficulty = ProceduralLevel.MIN_DIFFICULTY;
             int maxDifficulty = ProceduralLevel.MAX_DIFFICULTY;
             if (maxDifficulty > minDifficulty)
             {
                 _birdSpawnCount =
                     _birdSpawnCount *
-                    (levelDifficulty - minDifficulty) /
+                    (tileDifficulty - minDifficulty) /
                     (maxDifficulty - minDifficulty);
             }
         }

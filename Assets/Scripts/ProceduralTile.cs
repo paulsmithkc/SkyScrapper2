@@ -8,7 +8,7 @@ public class ProceduralTile : MonoBehaviour
     public float _depth = 50.0f;
     public float _pathRotationY = 0.0f;
     public ProceduralTile _mirrorPrefab = null;
-    public int _levelDifficulty = 5;
+    public int _difficulty = 5;
     public GameObject[] _optionalObstacles = new GameObject[0];
 
     // Use this for initialization
@@ -16,7 +16,7 @@ public class ProceduralTile : MonoBehaviour
     {
         int minDifficulty = ProceduralLevel.MIN_DIFFICULTY;
         int maxDifficulty = ProceduralLevel.MAX_DIFFICULTY;
-        _levelDifficulty = Mathf.Clamp(_levelDifficulty, minDifficulty, maxDifficulty);
+        _difficulty = Mathf.Clamp(_difficulty, minDifficulty, maxDifficulty);
 
         if (_optionalObstacles != null && _optionalObstacles.Length > 0)
         {
@@ -26,7 +26,7 @@ public class ProceduralTile : MonoBehaviour
             {
                 enabledObjects =
                     obstacleCount *
-                    (_levelDifficulty - minDifficulty) /
+                    (_difficulty - minDifficulty) /
                     (maxDifficulty - minDifficulty);
             }
             enabledObjects = Mathf.Clamp(enabledObjects, 0, obstacleCount);

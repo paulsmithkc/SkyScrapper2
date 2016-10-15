@@ -10,11 +10,13 @@ public class ProceduralLevel : MonoBehaviour {
     public GameObject _goalPrefab = null;
     public ProceduralTile[] _tilePrefabs = new ProceduralTile[1];
     public int _levelLength = 1;
-    public int _levelDifficulty = 5;
-    
+    public int _levelStartDifficulty = 0;
+    public int _levelEndDifficulty = 10;
+
     // Use this for initialization
     void Start () {
-        _levelDifficulty = Mathf.Clamp(_levelDifficulty, MIN_DIFFICULTY, MAX_DIFFICULTY);
+        _levelStartDifficulty = Mathf.Clamp(_levelStartDifficulty, MIN_DIFFICULTY, MAX_DIFFICULTY);
+        _levelEndDifficulty = Mathf.Clamp(_levelEndDifficulty, MIN_DIFFICULTY, MAX_DIFFICULTY);
 
         Vector3 curPosition = _spawnObject.transform.position;
         Quaternion curRotation = Quaternion.identity;
@@ -62,12 +64,15 @@ public class ProceduralLevel : MonoBehaviour {
             var tilePosition = curPosition + curForward * (0.5f * tile._depth);
             lastTileHeight = tile._height;
 
+            tilesRejected = 0;
             var obj = (ProceduralTile)GameObject.Instantiate(
                 tile,
                 tilePosition,
                 curRotation
             );
-            obj._levelDifficulty = this._levelDifficulty;
+            obj._difficulty =
+                _levelStartDifficulty + 
+                (_levelEndDifficulty - _levelStartDifficulty) * i / (_levelLength - 1);
 
             curPosition = tilePosition + curRotation * new Vector3(
                 0.5f * tile._width * Mathf.Sin(tileRotationY * Mathf.Deg2Rad),

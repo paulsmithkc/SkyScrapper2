@@ -411,6 +411,16 @@ Prefab:
       propertyPath: _spawnObject
       value: 
       objectReference: {fileID: 27828338}
+    - target: {fileID: 114000013484387588, guid: 53b2953504c732a4f861db18effc9f62,
+        type: 2}
+      propertyPath: _levelEndDifficulty
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000013484387588, guid: 53b2953504c732a4f861db18effc9f62,
+        type: 2}
+      propertyPath: _levelStartDifficulty
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 53b2953504c732a4f861db18effc9f62, type: 2}
   m_IsPrefabParent: 0
