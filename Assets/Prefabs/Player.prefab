@@ -466,9 +466,9 @@ MonoBehaviour:
   _nearBirdSoundVolume: 1
   _collisionSound: {fileID: 8300000, guid: 2a7f491c1060e934d96d4b09539f08d5, type: 3}
   _collisionSoundVolume: 1
-  _laserCollisionSound: {fileID: 8300000, guid: 08dc2a36b576ff448a51f5233ad6b800,
+  _laserCollisionSound: {fileID: 8300000, guid: 4744d132ec12b7541b4a41e7c5f16d97,
     type: 3}
-  _laserCollisionSoundVolume: 1
+  _laserCollisionSoundVolume: 3
   _ropeMaterial1: {fileID: 2100000, guid: d723921101065114e82e30f42b9c341d, type: 2}
   _ropeMaterial2: {fileID: 2100000, guid: 2c10dae7761f9314281c8cf0f62eb8db, type: 2}
   _hudFade: {fileID: 0}

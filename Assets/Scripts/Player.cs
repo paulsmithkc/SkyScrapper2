@@ -431,7 +431,7 @@ public class Player : MonoBehaviour
             _ropeRenderer.material = _ropeMaterial;
             _ropeRenderer.useWorldSpace = true;
             _ropeRenderer.enabled = true;
-            _ropeRenderer.SetWidth(0.1f, 0.1f);
+            _ropeRenderer.SetWidth(0.2f, 0.2f);
             _ropeRenderer.SetColors(Color.white, Color.white);
 
             bool attachedToGoal = string.Equals(hitInfo.collider.tag, GOAL_TAG);
@@ -468,6 +468,11 @@ public class Player : MonoBehaviour
             }
             _ropeRenderer.SetPosition(segments, ropeEnd);
             _ropeRenderer.enabled = true;
+
+            float ropeLength = Vector3.Distance(ropeStart, ropeEnd);
+            _ropeRenderer.material.mainTextureScale = new Vector2(
+                ropeLength * 4.0f, 1.0f
+            );
         }
 
         public void FixedUpdate(float deltaTime)
