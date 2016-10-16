@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
     private const string BIRD_TAG = "Bird";
     private const string NEAR_BIRD_TAG = "NearBird";
     private const string LASER_TAG = "Laser";
+    private const string BOUNDS_TAG = "Bounds";
 
     // Inputs
     private const string MOUSE_X_INPUT = "Mouse X";
@@ -71,6 +72,8 @@ public class Player : MonoBehaviour
     public float _nearBirdSoundVolume = 1.0f;
     public AudioClip _collisionSound = null;
     public float _collisionSoundVolume = 1.0f;
+    public AudioClip _laserCollisionSound = null;
+    public float _laserCollisionSoundVolume = 1.0f;
     public Material _ropeMaterial1;
     public Material _ropeMaterial2;
     
@@ -178,7 +181,7 @@ public class Player : MonoBehaviour
         }
         if (transform.position.y < _instadeathHeight)
         {
-            OnDeath();
+            OnDeath(BOUNDS_TAG);
             return;
         }
 
@@ -235,6 +238,10 @@ public class Player : MonoBehaviour
                 _ropeMaxLength,
                 layerMask
             );
+        }
+        if (wasHit && hitInfo.distance <= 2.0f)
+        {
+            wasHit = false;
         }
         if (wasHit)
         {
@@ -507,13 +514,24 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void OnDeath()
+    public void OnDeath(String tag)
     {
         if (!_dead && !_goalReached)
         {
+            Debug.LogFormat("Death by {0}", tag);
+            switch (tag)
+            {
+                case LASER_TAG:
+                    _fxAudioSource.PlayOneShot(_laserCollisionSound, _laserCollisionSoundVolume);
+                    break;
+                case BIRD_TAG:
+                case BOUNDS_TAG:
+                default:
+                    _fxAudioSource.PlayOneShot(_collisionSound, _collisionSoundVolume);
+                    break;
+            }
             _dead = true;
             _rigidbody.AddForce(_rigidbody.velocity * -0.5f, ForceMode.VelocityChange);
-            _fxAudioSource.PlayOneShot(_collisionSound, _collisionSoundVolume);
             _hudFade.FadeTo(Color.black, _loadLevelDelay * 0.5f);
             _hudFade.fadeText.text = "OUCH!";
             _hudFade.reticle.gameObject.SetActive(false);
@@ -552,7 +570,8 @@ public class Player : MonoBehaviour
 
     public void OnCollisionEnter(Collision col)
     {
-        switch (col.gameObject.tag)
+        String tag = col.gameObject.tag;
+        switch (tag)
         {
             case PLATFORM_TAG:
                 _rigidbody.AddForce(_rigidbody.velocity * -0.5f, ForceMode.VelocityChange);
@@ -562,7 +581,7 @@ public class Player : MonoBehaviour
                 break;
             case LASER_TAG:
             case BIRD_TAG:
-                OnDeath();
+                OnDeath(tag);
                 break;
             default:
                 break;
@@ -571,7 +590,8 @@ public class Player : MonoBehaviour
 
     public void OnTriggerEnter(Collider col)
     {
-        switch (col.gameObject.tag)
+        String tag = col.gameObject.tag;
+        switch (tag)
         {
 			case NEAR_BIRD_TAG:
             	_fxAudioSource.PlayOneShot(_nearBirdSound, _nearBirdSoundVolume);
@@ -581,7 +601,7 @@ public class Player : MonoBehaviour
                 break;
             case LASER_TAG:
             case BIRD_TAG:
-                OnDeath();
+                OnDeath(tag);
                 break;
             case PLAYER_TAG:
             default:

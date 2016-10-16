@@ -21,7 +21,7 @@ GameObject:
   - 4: {fileID: 4000010977322892}
   - 135: {fileID: 135000010832146278}
   m_Layer: 2
-  m_Name: NearBirdCollider
+  m_Name: NearCollider
   m_TagString: NearBird
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -171,5 +171,5 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 4
+  m_Radius: 6
   m_Center: {x: 0, y: 0, z: 0}

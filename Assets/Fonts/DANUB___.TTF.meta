@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: c2c648612abcd9a40a41f1e7d52ea320
+timeCreated: 1476569269
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Danube
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 7bbfce7d9b68383458a87b0490894ffc, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

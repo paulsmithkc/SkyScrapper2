@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="256"
+   height="256"
+   viewBox="0 0 256 256"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="player_icon.svg"
+   inkscape:export-filename="I:\projects\SkyScrapper2\Assets\Images\player_icon.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
+  <defs
+     id="defs4">
+    <filter
+       inkscape:collect="always"
+       style="color-interpolation-filters:sRGB"
+       id="filter4256"
+       x="-0.15636861"
+       width="1.3127372"
+       y="-0.15563312"
+       height="1.3112662">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="15.292678"
+         id="feGaussianBlur4258" />
+    </filter>
+    <filter
+       inkscape:collect="always"
+       style="color-interpolation-filters:sRGB"
+       id="filter4320"
+       x="-0.045059692"
+       width="1.0901194"
+       y="-0.036948947"
+       height="1.0738979">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="2.4247747"
+         id="feGaussianBlur4322" />
+    </filter>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#e27112"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.979899"
+     inkscape:cx="59.19311"
+     inkscape:cy="169.48806"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     units="px"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="1272"
+     inkscape:window-y="32"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-796.36216)">
+    <path
+       sodipodi:type="star"
+       style="opacity:1;fill:#1bff00;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:4.84499979;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter4256)"
+       id="path4686"
+       sodipodi:sides="6"
+       sodipodi:cx="128.79443"
+       sodipodi:cy="926.09308"
+       sodipodi:r1="121.79044"
+       sodipodi:r2="65.349823"
+       sodipodi:arg1="-0.77660072"
+       sodipodi:arg2="-0.25300194"
+       inkscape:flatsided="true"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="M 215.66757,840.73518 246.15311,958.64847 159.27998,1044.0064 41.921302,1011.451 11.435758,893.53769 98.30889,808.17979 Z"
+       transform="matrix(0.8218889,0,0,0.81651945,22.68718,167.89977)" />
+    <text
+       xml:space="preserve"
+       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:180px;line-height:125%;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Italic';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;display:none;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;filter:url(#filter4320)"
+       x="58.978943"
+       y="1074.1742"
+       id="text4688"
+       sodipodi:linespacing="125%"
+       transform="matrix(1.0214077,0,0,0.81959032,12.380156,75.43912)"><tspan
+         sodipodi:role="line"
+         id="tspan4690"
+         x="58.978943"
+         y="1074.1742"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:150px;line-height:125%;font-family:Danube;-inkscape-font-specification:'Danube, Bold';text-align:start;writing-mode:lr-tb;text-anchor:start">P</tspan></text>
+  </g>
+</svg>
