@@ -1,10 +1,9 @@
-﻿Shader "Rubberband/FiringArc"
+﻿Shader "Custom/UnlitTransparentColor"
 {
-	// Simple unlit transparent shader that animates the texture coordinates
+	// Simple unlit transparent shader
 	Properties
 	{
-		_MainTex ("Texture", 2D) = "white" {}
-		_Speed("Speed", Float) = 0.1
+		_Color("Color", Color) = (1,1,1,1)
 	}
 	SubShader
 	{
@@ -26,31 +25,25 @@
 			#pragma multi_compile_fog
 			#include "UnityCG.cginc"
 
-			uniform sampler2D _MainTex;
-			uniform float4 _MainTex_ST;
-			uniform float _Speed;
+			uniform float4 _Color;
 
 			struct vert_input {
 				float4 vertex : POSITION;
-				float4 uv : TEXCOORD0;
 			};
 			struct vert_output {
 				float4 pos : SV_POSITION;
-				float2 uv : TEXCOORD0;
-				UNITY_FOG_COORDS(1)
+				UNITY_FOG_COORDS(0)
 			};
 
 			vert_output vert(vert_input v) {
 				vert_output o;
 				o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
-				o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-				o.uv.x += _Time.w * -_Speed;
 				UNITY_TRANSFER_FOG(o, o.pos);
 				return o;
 			}
 
 			float4 frag(vert_output i) : COLOR {
-				fixed4 c = tex2D(_MainTex, i.uv);
+				fixed4 c = _Color;
 				UNITY_APPLY_FOG(i.fogCoord, c);
 				return c;
 			}

@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: MiniMap_PlayerIcon
-  m_Shader: {fileID: 4800000, guid: 9365512625d14284f8817819cb9c3b47, type: 3}
+  m_Shader: {fileID: 4800000, guid: e8938dca1e04a064893d2c773537bbab, type: 3}
   m_ShaderKeywords: _EMISSION
   m_LightmapFlags: 1
   m_CustomRenderQueue: -1

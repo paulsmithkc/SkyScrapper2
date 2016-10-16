@@ -1,4 +1,4 @@
-﻿Shader "Custom/MiniMap_Line"
+﻿Shader "Custom/UnlitOpaqueColor"
 {
 	// Simple unlit transparent shader
 	Properties
@@ -32,16 +32,19 @@
 			};
 			struct vert_output {
 				float4 pos : SV_POSITION;
+                UNITY_FOG_COORDS(0)
 			};
 
 			vert_output vert(vert_input v) {
 				vert_output o;
 				o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                UNITY_TRANSFER_FOG(o, o.pos);
 				return o;
 			}
 
 			float4 frag(vert_output i) : COLOR {
 				fixed4 c = _Color;
+                UNITY_APPLY_FOG(i.fogCoord, c);
 				return c;
 			}
 
