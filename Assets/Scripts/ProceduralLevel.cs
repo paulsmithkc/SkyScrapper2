@@ -80,8 +80,10 @@ public class ProceduralLevel : MonoBehaviour {
             var obj = (ProceduralTile)GameObject.Instantiate(
                 tile,
                 tilePosition,
-                curRotation
+                curRotation,
+                transform
             );
+            obj.name = string.Format("Tile{0}_{1}", tileNumber, tile.name);
             obj._difficulty =
                 _levelStartDifficulty + 
                 (_levelEndDifficulty - _levelStartDifficulty) * tileNumber / (_levelLength - 1);
@@ -104,7 +106,8 @@ public class ProceduralLevel : MonoBehaviour {
         GameObject.Instantiate(
             _goalPrefab,
             curPosition,
-            curRotation
+            curRotation,
+            transform
         );
 
         for (; waypointNumber < _waypoints.Length; ++waypointNumber)

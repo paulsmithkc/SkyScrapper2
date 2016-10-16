@@ -344,16 +344,16 @@ Prefab:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 114000013675420918, guid: 98e462b2a0eadac4fa26faf77ec619fc,
-        type: 2}
-      propertyPath: _level
-      value: 
-      objectReference: {fileID: 1827315530}
     - target: {fileID: 114000010921271454, guid: 98e462b2a0eadac4fa26faf77ec619fc,
         type: 2}
       propertyPath: _hudFade
       value: 
       objectReference: {fileID: 284588033}
+    - target: {fileID: 114000013675420918, guid: 98e462b2a0eadac4fa26faf77ec619fc,
+        type: 2}
+      propertyPath: _level
+      value: 
+      objectReference: {fileID: 1827315530}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 98e462b2a0eadac4fa26faf77ec619fc, type: 2}
   m_IsPrefabParent: 0
