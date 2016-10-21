@@ -20,6 +20,8 @@ public class ProceduralTile : MonoBehaviour
 
     public GameObject[] _optionalObstacles = new GameObject[0];
 
+    private List<GameObject> _spawnedObjects = null;
+
     [System.Serializable]
     public class HookerSaveData {
         public Vector3 position = Vector3.zero;
@@ -40,26 +42,28 @@ public class ProceduralTile : MonoBehaviour
     }
 
     // Use this for initialization
-    void Start()
+    public void Start()
     {
         int minDifficulty = ProceduralLevel.MIN_DIFFICULTY;
         int maxDifficulty = ProceduralLevel.MAX_DIFFICULTY;
         _difficulty = Mathf.Clamp(_difficulty, minDifficulty, maxDifficulty);
 
         Vector3 pos = transform.position;
-        List<GameObject> optionalObstacles = new List<GameObject>(_laserWalls.Length);
+        List<GameObject> optionalObstacles = new List<GameObject>();
+        _spawnedObjects = new List<GameObject>();
 
         if (_hookerPrefab != null && _hookers != null && _hookers.Length > 0)
         {
             foreach (var d in _hookers)
             {
                 float ry = Random.Range(-180.0f, 180.0f);
-                GameObject.Instantiate(
+                var obj = (GameObject)GameObject.Instantiate(
                     _hookerPrefab,
                     pos + d.position,
                     Quaternion.Euler(0.0f, ry, 0.0f),
                     transform
                 );
+                _spawnedObjects.Add(obj);
             }
         }
         if (_coinPrefab != null && _coins != null && _coins.Length > 0)
@@ -67,12 +71,13 @@ public class ProceduralTile : MonoBehaviour
             foreach (var d in _coins)
             {
                 float ry = Random.Range(-180.0f, 180.0f);
-                GameObject.Instantiate(
+                var obj = (GameObject)GameObject.Instantiate(
                     _coinPrefab,
                     pos + d.position,
                     Quaternion.Euler(0.0f, ry, 0.0f),
                     transform
                 );
+                _spawnedObjects.Add(obj);
             }
         }
         if (_laserWallPrefab != null && _laserWalls != null && _laserWalls.Length > 0)
@@ -87,6 +92,7 @@ public class ProceduralTile : MonoBehaviour
                 );
                 obj.transform.localScale = d.scale;
                 optionalObstacles.Add(obj);
+                _spawnedObjects.Add(obj);
             }
         }
         if (_optionalObstacles != null)
@@ -148,13 +154,19 @@ public class ProceduralTile : MonoBehaviour
             }
         }
     }
-
-    // Update is called once per frame
-    void Update()
+    
+    public void OnDestroy()
     {
+        if (_spawnedObjects != null)
+        {
+            foreach (GameObject obj in _spawnedObjects)
+            {
+                GameObject.Destroy(obj);
+            }
+        }
     }
 
-    void OnDrawGizmos()
+    public void OnDrawGizmos()
     {
         Gizmos.matrix = Matrix4x4.TRS(
             transform.position,
