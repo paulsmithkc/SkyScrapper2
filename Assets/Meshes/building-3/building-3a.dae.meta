@@ -8,16 +8,47 @@ ModelImporter:
     100000: //RootNode
     100002: skp_camera_Last_Saved_SketchUp_View
     100004: group_0
+    100006: group_1
+    100008: ID25
+    100010: group_2
+    100012: group_3
+    100014: group_4
     400000: //RootNode
     400002: skp_camera_Last_Saved_SketchUp_View
     400004: group_0
+    400006: group_1
+    400008: ID25
+    400010: group_2
+    400012: group_3
+    400014: group_4
     2300000: //RootNode
     2300002: group_0
+    2300004: group_1
+    2300006: ID25
+    2300008: group_2
+    2300010: group_3
+    2300012: group_4
     3300000: //RootNode
     3300002: group_0
+    3300004: group_1
+    3300006: ID25
+    3300008: group_2
+    3300010: group_3
+    3300012: group_4
     4300000: SketchUp
     4300002: group_0
+    4300004: ID25
+    4300006: group_1
+    4300008: group_2
+    4300010: group_3
+    4300012: group_4
     6400000: group_0
+    6400002: //RootNode
+    6400004: group_1
+    6400006: ID25
+    6400008: group_2
+    6400010: group_3
+    6400012: group_4
     9500000: //RootNode
   materials:
     importMaterials: 1

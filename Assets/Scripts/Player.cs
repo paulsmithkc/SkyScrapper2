@@ -504,6 +504,8 @@ public class Player : MonoBehaviour
                 r.Dispose();
             }
             _ropes.Clear();
+
+            Time.timeScale = 1.0f;
         }
     }
 

@@ -96,9 +96,10 @@ public class ProceduralLevel : MonoBehaviour {
                 if (tileRotationY <= 0.0f)
                 {
                     int randomBuildingIndex = Mathf.Clamp(Random.Range(0, buildingPrefabCount), 0, buildingPrefabCount - 1);
+                    var building = _buildingPrefabs[randomBuildingIndex];
                     GameObject.Instantiate(
-                        _buildingPrefabs[randomBuildingIndex],
-                        tilePosition + curRotation * Vector3.right * 100.0f,
+                        building,
+                        tilePosition + curRotation * Vector3.right * (tile._width * 0.5f + building._radius),
                         Quaternion.identity,
                         obj.transform
                     );
@@ -106,9 +107,10 @@ public class ProceduralLevel : MonoBehaviour {
                 if (tileRotationY >= 0.0f)
                 {
                     int randomBuildingIndex = Mathf.Clamp(Random.Range(0, buildingPrefabCount), 0, buildingPrefabCount - 1);
+                    var building = _buildingPrefabs[randomBuildingIndex];
                     GameObject.Instantiate(
-                        _buildingPrefabs[randomBuildingIndex],
-                        tilePosition + curRotation * Vector3.right * -100.0f,
+                        building,
+                        tilePosition + curRotation * Vector3.right * -(tile._width * 0.5f + building._radius),
                         Quaternion.identity,
                         obj.transform
                     );
