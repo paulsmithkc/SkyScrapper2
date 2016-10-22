@@ -8,7 +8,8 @@ public class ProceduralLevel : MonoBehaviour {
 
     public GameObject _spawnObject = null;
     public GameObject _goalPrefab = null;
-    public ProceduralTile[] _tilePrefabs = new ProceduralTile[1];
+    public ProceduralTile[] _tilePrefabs = new ProceduralTile[0];
+    public Building[] _buildingPrefabs = new Building[0];
     public int _levelLength = 1;
     public int _levelStartDifficulty = 0;
     public int _levelEndDifficulty = 10;
@@ -33,13 +34,14 @@ public class ProceduralLevel : MonoBehaviour {
         _waypoints[0] = curPosition;
 
         int tilePrefabCount = _tilePrefabs.Length;
+        int buildingPrefabCount = _buildingPrefabs.Length;
         int tilesRejected = 0;
         int tileNumber = 0;
         int waypointNumber = 1;
         for (; tileNumber < _levelLength; ++tileNumber, ++waypointNumber)
         {
             int randomTileIndex = Mathf.Clamp(Random.Range(0, tilePrefabCount), 0, tilePrefabCount - 1);
-
+            
             ProceduralTile tile = _tilePrefabs[randomTileIndex];
             float tileRotationY = tile._pathRotationY;
             Quaternion rotationChange = Quaternion.Euler(0.0f, tileRotationY, 0.0f);
@@ -88,6 +90,30 @@ public class ProceduralLevel : MonoBehaviour {
                 _levelStartDifficulty + 
                 (_levelEndDifficulty - _levelStartDifficulty) * tileNumber / (_levelLength - 1);
             _waypoints[waypointNumber] = tilePosition;
+
+            if ((tileNumber % 3) == 2 && tileNumber < (_levelLength - 2))
+            {
+                if (tileRotationY <= 0.0f)
+                {
+                    int randomBuildingIndex = Mathf.Clamp(Random.Range(0, buildingPrefabCount), 0, buildingPrefabCount - 1);
+                    GameObject.Instantiate(
+                        _buildingPrefabs[randomBuildingIndex],
+                        tilePosition + curRotation * Vector3.right * 100.0f,
+                        Quaternion.identity,
+                        obj.transform
+                    );
+                }
+                if (tileRotationY >= 0.0f)
+                {
+                    int randomBuildingIndex = Mathf.Clamp(Random.Range(0, buildingPrefabCount), 0, buildingPrefabCount - 1);
+                    GameObject.Instantiate(
+                        _buildingPrefabs[randomBuildingIndex],
+                        tilePosition + curRotation * Vector3.right * -100.0f,
+                        Quaternion.identity,
+                        obj.transform
+                    );
+                }
+            }
 
             curPosition = tilePosition + curRotation * new Vector3(
                 0.5f * tile._width * Mathf.Sin(tileRotationY * Mathf.Deg2Rad),

@@ -199,7 +199,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
 --- !u!1001 &208614725
 Prefab:
   m_ObjectHideFlags: 0
@@ -245,7 +245,7 @@ Prefab:
     - target: {fileID: 224000011033480668, guid: 14d9fac6449518840a568619b536c323,
         type: 2}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 224000011033480668, guid: 14d9fac6449518840a568619b536c323,
         type: 2}
@@ -412,16 +412,6 @@ Prefab:
       propertyPath: _spawnObject
       value: 
       objectReference: {fileID: 27828338}
-    - target: {fileID: 114000013484387588, guid: 53b2953504c732a4f861db18effc9f62,
-        type: 2}
-      propertyPath: _levelEndDifficulty
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 114000013484387588, guid: 53b2953504c732a4f861db18effc9f62,
-        type: 2}
-      propertyPath: _levelStartDifficulty
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 53b2953504c732a4f861db18effc9f62, type: 2}
   m_IsPrefabParent: 0

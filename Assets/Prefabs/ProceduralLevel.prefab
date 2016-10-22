@@ -62,5 +62,13 @@ MonoBehaviour:
   - {fileID: 114000013533020864, guid: fb68581b52a044b4db4d8bc21983a234, type: 2}
   - {fileID: 114000012899488388, guid: 7c0e60db579579f49a01fb85924f8c41, type: 2}
   - {fileID: 114000014206610382, guid: c3de78ef82bc95645bebbaa41a38300f, type: 2}
+  _buildingPrefabs:
+  - {fileID: 114000011973444936, guid: c3cfd5e411f50b04892716c401cdc64e, type: 2}
+  - {fileID: 114000010906649390, guid: 1824324916e956f4e91c3e449da80bdc, type: 2}
+  - {fileID: 114000010348631580, guid: c618d3fc7be376449ae99fb48ac3506d, type: 2}
+  - {fileID: 114000011723065734, guid: 2fb105fe586f4404a82c1024a9024ee1, type: 2}
+  - {fileID: 114000013076783648, guid: a36cb4a91d20f7c4ca033f102cb1e031, type: 2}
+  - {fileID: 114000011759508622, guid: 6595579d8fe2fcc4cbcda0157832258c, type: 2}
   _levelLength: 16
-  _levelDifficulty: 2
+  _levelStartDifficulty: 0
+  _levelEndDifficulty: 6

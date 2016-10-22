@@ -14,7 +14,7 @@ public class CopyPasteTransform : ScriptableObject
     {
         if (Selection.activeTransform != null)
         {
-            _position = Selection.activeTransform.position;
+            _position = Selection.activeTransform.localPosition;
             _rotation = Selection.activeTransform.localRotation;
             _scale = Selection.activeTransform.localScale;
         }
@@ -57,7 +57,7 @@ public class CopyPasteTransform : ScriptableObject
             foreach (Transform s in selections)
             {
                 Undo.RecordObject(s, "Paste Transform");
-                s.position = _position;
+                s.localPosition = _position;
                 s.localRotation = _rotation;
                 s.localScale = _scale;
             }
@@ -74,7 +74,7 @@ public class CopyPasteTransform : ScriptableObject
             foreach (Transform s in selections)
             {
                 Undo.RecordObject(s, "Paste Transform");
-                s.position = _position;
+                s.localPosition = _position;
             }
         }
     }

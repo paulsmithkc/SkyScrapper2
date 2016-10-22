@@ -1398,7 +1398,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _birdPrefab: {fileID: 1000011880328428, guid: b8de883aca383864e8f51ff75241fa4e,
     type: 2}
-  _birdSpawnCount: 50
+  _birdSpawnCount: 25
   _birdSpawnRadius: 45
   _birdSpawnHeight: 30
 --- !u!114 &114000013533020864
@@ -1419,6 +1419,12 @@ MonoBehaviour:
   _mirrorPrefab: {fileID: 114000012899488388, guid: 7c0e60db579579f49a01fb85924f8c41,
     type: 2}
   _difficulty: 5
+  _hookerPrefab: {fileID: 0}
+  _hookers: []
+  _coinPrefab: {fileID: 0}
+  _coins: []
+  _laserWallPrefab: {fileID: 0}
+  _laserWalls: []
   _optionalObstacles:
   - {fileID: 1000013324703610}
   - {fileID: 1000011887203986}

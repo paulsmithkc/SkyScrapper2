@@ -99,6 +99,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _birdPrefab: {fileID: 1000011880328428, guid: b8de883aca383864e8f51ff75241fa4e,
     type: 2}
-  _birdSpawnCount: 50
+  _birdSpawnCount: 25
   _birdSpawnRadius: 25
   _birdSpawnHeight: 30
