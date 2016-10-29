@@ -24,6 +24,8 @@ public class Player : MonoBehaviour
     public const string BOUNDS_TAG = "Bounds";
 
     // Inputs
+    public const string HORIZONTAL_INPUT = "Horizontal";
+    public const string VERTICAL_INPUT = "Vertical";
     public const string MOUSE_X_INPUT = "Mouse X";
     public const string MOUSE_Y_INPUT = "Mouse Y";
     public const string FIRE1_INPUT = "Fire1";
@@ -44,8 +46,11 @@ public class Player : MonoBehaviour
     private float _nearPlatformRadius = 3.0f;
     private float _slowTimeSpeed = 0.25f;
     private float _jetpackForce = 20.0f;
+    private float _jumpForce = 3.0f;
+    private float _runForce = 5.0f;
+    private int _airJumpsMax = 2;
 
-    private const float MIN_SPHERECAST_RADIUS = 2.0f;
+    private const float MIN_SPHERECAST_RADIUS = 0.5f;
     private const float NORMAL_DRAG = 0.2f;
     private const float ROPE_BOMB_DRAG = 0.9f;
 
@@ -55,6 +60,10 @@ public class Player : MonoBehaviour
     private float _loadLevelDelay = 2.0f;
     private List<PlayerRope> _ropes = new List<PlayerRope>();
     private float _sphereCastRadius = MIN_SPHERECAST_RADIUS;
+    private bool _prevFrameWasHit = false;
+    private RaycastHit _prevFrameHitInfo;
+    private bool _grounded = false;
+    private int _airJumpsAvailable = 0;
 
     // Editor Fields
 
@@ -82,9 +91,6 @@ public class Player : MonoBehaviour
     public GameObject _grapple;
     public string _nextLevel;
 
-    public bool _prevFrameWasHit = false;
-    public RaycastHit _prevFrameHitInfo;
-
     public bool dead
     {
         get { return _dead; }
@@ -107,6 +113,8 @@ public class Player : MonoBehaviour
         _fxAudioSource = gameObject.AddComponent<AudioSource>();
         //_targetAudioSource = _target.AddComponent<AudioSource>();
         _prevFrameWasHit = false;
+        _grounded = false;
+        _airJumpsAvailable = 0;
 
         if (!_camera)
         {
@@ -145,7 +153,7 @@ public class Player : MonoBehaviour
             Cursor.lockState = paused ? CursorLockMode.None : CursorLockMode.Locked;
         }
 
-        // Quit / Restart
+        // Quit / Restart / Goal / Death
 
         if (Input.GetButtonDown(QUIT_INPUT))
         {
@@ -191,12 +199,15 @@ public class Player : MonoBehaviour
         }
 
         // Inputs
-        
+
+        //float horizontal = Input.GetAxis(HORIZONTAL_INPUT);
+        //float vertical = Input.GetAxis(VERTICAL_INPUT);
         float mouseX = Input.GetAxis(MOUSE_X_INPUT);
         float mouseY = Input.GetAxis(MOUSE_Y_INPUT);
         bool fire1 = Input.GetButtonDown(FIRE1_INPUT);
         bool fire2 = Input.GetButtonDown(FIRE2_INPUT);
         bool fire3 = Input.GetButtonDown(FIRE3_INPUT);
+        bool jumpButtonDown = Input.GetButtonDown(JUMP_INPUT);
 
         // Camera
 
@@ -212,26 +223,44 @@ public class Player : MonoBehaviour
         _camera.transform.forward = transform.forward;
         _camera.transform.Rotate(_pitch, 0.0f, 0.0f);
 
-        // Grapple Hooks
+        // Grounded / Jump
 
-        Vector3 cameraPosition = _camera.transform.position;
-        Vector3 cameraForward = _camera.transform.forward;
-        int layerMask = ~(
-            1 << PLAYER_LAYER | 
-            1 << UI_LAYER | 
+        int grappleLayerMask = ~(
+            1 << PLAYER_LAYER |
+            1 << UI_LAYER |
             1 << LASER_LAYER |
             1 << IGNORE_RAYCAST_LAYER
         );
         RaycastHit hitInfo;
+        _grounded = Physics.SphereCast(
+            transform.position,
+            0.5f,
+            -transform.up,
+            out hitInfo,
+            1.5f,
+            grappleLayerMask
+        );
+        if (_grounded) {
+            _airJumpsAvailable = _airJumpsMax;
+        }
+        if (jumpButtonDown)
+        {
+            Jump();
+        }
+
+        // Grapple Hooks
+
+        Vector3 cameraPosition = _camera.transform.position;
+        Vector3 cameraForward = _camera.transform.forward;
         bool wasHit = Physics.SphereCast(
             cameraPosition,
             MIN_SPHERECAST_RADIUS,
             cameraForward, 
             out hitInfo, 
-            PlayerRope.ROPE_MAX_LENGTH, 
-            layerMask
+            PlayerRope.ROPE_MAX_LENGTH,
+            grappleLayerMask
         );
-
+        
 
         Vector3 velocity = _rigidbody.velocity;
         Vector3 velocityTangential = velocity - Vector3.Project(velocity, cameraForward);
@@ -245,13 +274,18 @@ public class Player : MonoBehaviour
                 cameraForward,
                 out hitInfo,
                 PlayerRope.ROPE_MAX_LENGTH,
-                layerMask
+                grappleLayerMask
             );
         }
 
-        if (wasHit && hitInfo.distance <= 2.0f)
+        if (wasHit)
         {
-            wasHit = false;
+            Vector3 ropeVector = hitInfo.point - _rigidbody.position;
+            if ((ropeVector.y >= -2.5f && ropeVector.y <= 1.5f) ||
+                ropeVector.magnitude < 1.5f)
+            {
+                wasHit = false;
+            }
         }
 
         // Position target1
@@ -300,17 +334,34 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
+        // Inputs
+
         float deltaTime = Time.fixedDeltaTime;
-        bool jump = Input.GetButton(JUMP_INPUT);
-        if (jump) //|| _ropes.Count > 0)
+        float horizontal = Input.GetAxis(HORIZONTAL_INPUT);
+        float vertical = Input.GetAxis(VERTICAL_INPUT);
+        bool jumpPressed = Input.GetButton(JUMP_INPUT);
+        
+        // Running
+
+        //if (_grounded)
         {
-            float force = _jetpackForce;
-            if (!jump) { force *= 0.5f; }
-            _rigidbody.AddForce(
-                _camera.transform.forward * force,
-                ForceMode.Acceleration
-            );
+            _rigidbody.AddForce(transform.forward * vertical * _runForce);
+            _rigidbody.AddForce(transform.right * horizontal * _runForce);
         }
+
+        // Jetpack
+
+        //if (jumpPressed) //|| _ropes.Count > 0)
+        //{
+        //    float force = _jetpackForce;
+        //    if (!jumpPressed) { force *= 0.5f; }
+        //    _rigidbody.AddForce(
+        //        _camera.transform.forward * force,
+        //        ForceMode.Acceleration
+        //    );
+        //}
+
+        // Ropes
 
         foreach (var r in _ropes)
         {
@@ -323,6 +374,21 @@ public class Player : MonoBehaviour
         foreach (var r in _ropes)
         {
             r.OnDrawGizmos();
+        }
+    }
+
+    private void Jump()
+    {
+        if (_grounded || _airJumpsAvailable > 0)
+        {
+            _rigidbody.AddForce(
+            transform.up * (_jumpForce - _rigidbody.velocity.y),
+                ForceMode.VelocityChange
+            );
+            if (!_grounded)
+            {
+                --_airJumpsAvailable;
+            }
         }
     }
 
@@ -352,30 +418,8 @@ public class Player : MonoBehaviour
                 ForceMode.VelocityChange
             );
 
-            // Jump up if near a roof
-            int layerMask = ~(
-                1 << PLAYER_LAYER |
-                1 << UI_LAYER |
-                1 << LASER_LAYER |
-                1 << IGNORE_RAYCAST_LAYER
-            );
-            var nearbyColliders = Physics.OverlapSphere(transform.position, _nearPlatformRadius, layerMask);
-            var nearPlatform = false;
-            foreach (var c in nearbyColliders)
-            {
-                if (c.gameObject.tag == PLATFORM_TAG)
-                {
-                    nearPlatform = true;
-                    break;
-                }
-            }
-            if (nearPlatform)
-            {
-                _rigidbody.AddForce(
-                    transform.up * 3.0f,
-                    ForceMode.VelocityChange
-                );
-            }
+            // Jump up if grounded
+            if (_grounded) { Jump(); }
         }
     }
 

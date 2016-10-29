@@ -1,16 +1,32 @@
 fileFormatVersion: 2
-guid: 2a2ef167ca4c46a48ae79bc967365049
-timeCreated: 1477117137
+guid: f9ae9ff5eef165c4c9a2b6ca6a483fb9
+timeCreated: 1477752295
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
     100000: //RootNode
+    100002: group_0
+    100004: group_1
+    100006: group_2
+    100008: skp_camera_Last_Saved_SketchUp_View
     400000: //RootNode
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: SketchUp
-    7400000: Default Take
+    400002: group_0
+    400004: group_1
+    400006: group_2
+    400008: skp_camera_Last_Saved_SketchUp_View
+    2300000: group_0
+    2300002: group_1
+    2300004: group_2
+    3300000: group_0
+    3300002: group_1
+    3300004: group_2
+    4300000: group_0
+    4300002: group_1
+    4300004: group_2
+    6400000: group_0
+    6400002: group_1
+    6400004: group_2
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -38,7 +54,7 @@ ModelImporter:
     lODScreenPercentages: []
     globalScale: 1
     meshCompression: 0
-    addColliders: 0
+    addColliders: 1
     importBlendShapes: 1
     swapUVChannels: 0
     generateSecondaryUV: 0

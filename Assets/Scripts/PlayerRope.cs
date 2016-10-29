@@ -6,9 +6,9 @@ public class PlayerRope : IDisposable
     // Physics Tuning
     public const float ROPE_MAX_LENGTH = 100.0f;
     public const float ROPE_ATTACH_DECELERATION = 0.0f;
-    public const float ROPE_FORCE_NORMAL = 0.5f;
+    public const float ROPE_FORCE_NORMAL = 0.3f;
     public const float ROPE_FORCE_GOAL = 1.0f;
-    public const float ROPE_RELAXED_LENGTH_NORMAL = 5.0f;
+    public const float ROPE_RELAXED_LENGTH_NORMAL = 2.0f;
     public const float ROPE_RELAXED_LENGTH_GOAL = -10.0f;
 
     public int _id;
@@ -121,17 +121,34 @@ public class PlayerRope : IDisposable
         //playerRigidBody.AddForce(_centripetalAccel, ForceMode.Acceleration);
 
         // Spring Force
-        ropeVector -= ropeVector.normalized * _ropeRelaxedLength;
-        _springAccel = ropeVector * _ropeForce;
+        _springAccel = (ropeVector - ropeVector.normalized * _ropeRelaxedLength) * _ropeForce;
         playerRigidBody.AddForce(_springAccel, ForceMode.Acceleration);
+
+        //Vector3 n = ropeVector.normalized;
+        //float nm = n.magnitude;
+        //if (nm >= 0.5f && nm <= 1.5f)
+        //{
+        //    playerRigidBody.AddForce(n * 5.0f, ForceMode.Acceleration);
+        //}
 
         if (!_attachedToGoal && _id < 3)
         {
             // Detach the rope once we have swung sufficiently past our attachment point
-            float s = Vector3.Dot(ropeVector, _ropeInitialVector) / _ropeInitialVector.magnitude;
-            if (s <= -0.5f)
+            // by check that the projection of the ropeVector onto the initial attachment vector
+            // in the xz plane is less than -0.5 * initial rope length
+            Vector3 u = ropeVector;
+            Vector3 v = _ropeInitialVector;
+            u.y = 0.0f;
+            v.y = 0.0f;
+            float um = u.magnitude;
+            float vm = v.magnitude;
+            if (um >= 1.0f && vm >= 1.0f)
             {
-                _detach = true;
+                float s = Vector3.Dot(u, v) / um;
+                if (s <= -0.5f * vm)
+                {
+                    _detach = true;
+                }
             }
         }
     }

@@ -376,5 +376,11 @@ MonoBehaviour:
   _depth: 201
   _pathRotationY: 0
   _mirrorPrefab: {fileID: 0}
-  _levelDifficulty: 5
+  _difficulty: 5
+  _hookerPrefab: {fileID: 0}
+  _hookers: []
+  _coinPrefab: {fileID: 0}
+  _coins: []
+  _laserWallPrefab: {fileID: 0}
+  _laserWalls: []
   _optionalObstacles: []
